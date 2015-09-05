@@ -1,7 +1,7 @@
 #Challenge 4
 ####Binary: youPecks
 ####Type: PE Executable
-####Arch: x86_x64
+####Arch: x86
 
 ##Armen's Solution
 The first thing we see when throwing this binary into PEiD is that it is packed, apparently with UPX (although it is reportedly packed with Crypto-Lock v2.02, according to the pedump utility.)
