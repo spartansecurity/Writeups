@@ -101,10 +101,26 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 }
 ``` 
 
-After setting up kernel debugging, I was able to set a bp in the challenge.sys kernel driver on the jump table I found which redirects the lpr from the request code to its correct handler. I then sent the IOCTL call to the kernel driver with the code "22E0DC" and traced it down the jump table into its handler function. The IOCTL handler function consisted of a large sequence of "and" instructions and branches.
+After setting up kernel debugging, I was able to set a bp in the challenge.sys kernel driver on the jump table I found which redirects the lpr from the request code to its correct handler. I then sent the IOCTL call to the kernel driver with the code "22E0DC" and traced it down the jump table into its handler function @ `0x29B620`. The IOCTL handler function consisted of a large sequence of "and" instructions and branches.
+<br><img src="imgs/chal10-bitmasker-1.png" width="500"><br>
 Essentially, this function is responsible for determining the bits of a string. Decoding the string bit-by-bit produces the string, "try this ioctl: 22E068". I then sent another IOCTL call using "22E068" as the control code and traced it to what appeared to be a TEA decryption algorithm.
+<br><img src="imgs/chal10-tea-decrypt.png" width="500"><br>
 Before the PC reaches the TEA decryption algorithm, however, it goes through a massive function which passes 3 arguments into another function: the key, an int which is later used to determine the number of rounds the decryption algorithm is iterated through, and the address of the buffer to be decrypted. The next function passes chunks of the data in the buffer into the actual TEA decryption algorithm in multiple rounds. After running a couple trials with WinDbg I noticed that the data contained within the buffer the TEA decryption algorithm decrypts changes with each runtime. However, the key and the number of rounds remain the same. After looking closer at the location of the buffer that is passed into the decryption function I x-ref'd each byte and noted they all contained constant values before being mutated by presumably the aforementioned massive function in the control code handler.
 Putting the bytes of the xref'd bytes together gave me
-567FDCFAAA2799C46C7CFC926161471A19B963FD0CF2B620C02D5CFDD97154964F43F7FFBB4C5D31
+`567FDCFAAA2799C46C7CFC926161471A19B963FD0CF2B620C02D5CFDD97154964F43F7FFBB4C5D31`
 which I hoped would produce something meaningful if passed into the TEA decryption function. 
 From there, it was a simple matter of performing in-memory patching w/WinDbg of the contents of the buffer that get passed into the TEA decryption algorithm at runtime and examining the result to obtain the solution. 
+```
+kd> dp @edx-20
+b1db9890  6f636e75 7469646e 616e6f69 6f635f6c
+b1db98a0  7469646e 736e6f69 616c6640 6f2d6572
+b1db98b0  6f632e6e 0000006d 00000000 00000000
+b1db98c0  00000000 00000000 00000000 00000000
+b1db98d0  00000000 00000000 00000000 00000000
+b1db98e0  00000000 00000000 00000000 00000000
+b1db98f0  00000000 00000000 00000000 00000000
+b1db9900  00000000 00000000 00000000 00000000
+kd> da @edx-20
+b1db9890  "unconditional_conditions@flare-o"
+b1db98b0  "n.com"
+```
