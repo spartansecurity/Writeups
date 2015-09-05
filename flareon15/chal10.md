@@ -1,6 +1,10 @@
 ##Josh's Solution
 When I first executed the program, nothing appeared to happen. Upon closer inspection in Anubis, however, I discovered it created 2 files: c:/windows/system32/ioctl.exe and a kernel driver c:/windows/system32/challenge.sys
 <br><img src="imgs/chal10-anubis.png" width="300"><br>
+It also created and ran a service to load the device driver, challenge.sys, into the kernel.
+The ioctl.exe is, presumably, responsible for sending driver IOCTLs to the driver's IOCTL handler in challenge.sys.At first glance, the challenge.sys device driver contains some pretty gnarly functions:
+<br><img src="imgs/chal10-hell.png" width="500"><br>
+<br><img src="imgs/chal10-bitmasker-2.png" width="500"><br>
 Then, looking through the program loader.exe in IDA Pro I noticed it was or contained an autoit script. I then decompiled this script by opening loader.exe in exe2aut. In the decompiled code, I noticed a couple calls to the function "dothis()". 
 
 ```
@@ -36,7 +40,7 @@ I printed the outputs of those functions to message boxes which revealed that "i
 
 A quick look at ioctl.exe under IDA reveals that indeed, argv[1] is converted to an unsigned long int and used as the control code to be passed into DeviceIoControl().
 
-```
+```C
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
   const char *v3; // ST18_4@1
