@@ -1,5 +1,5 @@
 #Challenge 10
-####Binary: loader.exe
+####Binary: loader
 ####Type: PE Executable
 ####Arch: x86
 

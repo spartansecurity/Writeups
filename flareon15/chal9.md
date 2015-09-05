@@ -1,3 +1,7 @@
+#Challenge 9
+####Binary: you_are_very_good_at_this
+####Type: PE Executable
+####Arch: x86
 ##Josh's Solution
 I noticed there was anti-disassembly being employed so at first I tried manually fixing the bad bytes, turning code to data and vice-versa. However, after a while of doing this, I realized it would be too hard to do this for the whole program manually so I had to try another approach. I then skipped to the last CMP (0x401C27) it makes before branching to either "You are failure" or "You are success". The CMP statement didn't make any sense though because it compared EAX to 0x29, but despite trying different inputs, the value of EAX always remained 0x28d7. After playing around with the binary more and tracing execution, I noticed it referenced FS:[0x30], or the process's PEB. Specifically, it compared the value at offset 0x68 of the PEB to 0x70.
 <br><img src="imgs/chal9-peb.png" width="500">
