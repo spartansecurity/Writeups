@@ -1,6 +1,6 @@
 ##Josh's Solution
 When I first executed the program, nothing appeared to happen. Upon closer inspection in Anubis, however, I discovered it created 2 files: c:/windows/system32/ioctl.exe and a kernel driver c:/windows/system32/challenge.sys
-<br><img src="imgs/chal10-anubis.png" width="500"><br>
+<br><img src="imgs/chal10-anubis.png" width="300"><br>
 Then, looking through the program loader.exe in IDA Pro I noticed it was or contained an autoit script. I then decompiled this script by opening loader.exe in exe2aut. In the decompiled code, I noticed a couple calls to the function "dothis()". 
 
 ```
@@ -32,7 +32,66 @@ Func dothis($data, $key)
 EndFunc
 ```
 I printed the outputs of those functions to message boxes which revealed that "ioctl.exe" was executed with the parameter "22E0DC" which I assumed was the IO control/request code. 
-<br><img src="imgs/chal10-ioctl-1.png" width="500"><br>
+<br><img src="imgs/chal10-ioctl-1.png" width="300"><br>
+
+A quick look at ioctl.exe under IDA reveals that indeed, argv[1] is converted to an unsigned long int and used as the control code to be passed into DeviceIoControl().
+
+```
+int __cdecl main(int argc, const char **argv, const char **envp)
+{
+  const char *v3; // ST18_4@1
+  unsigned __int32 v4; // ebx@1
+  HANDLE v5; // esi@1
+  int result; // eax@2
+  HANDLE v7; // edi@3
+  struct _OVERLAPPED Overlapped; // [sp+8h] [bp-24h]@5
+  DWORD BytesReturned; // [sp+1Ch] [bp-10h]@1
+  int OutBuffer; // [sp+20h] [bp-Ch]@1
+  int v11; // [sp+24h] [bp-8h]@1
+
+  OutBuffer = 0;
+  v11 = 0;
+  v3 = argv[1];
+  BytesReturned = 0;
+  v4 = strtoul(v3, 0, 16);
+  v5 = CreateEventA(0, 1, 0, 0);
+  if ( v5 )
+  {
+    v7 = CreateFileA(FileName, 0xC0000000, 3u, 0, 3u, 0x40000000u, 0);
+    if ( v7 == (HANDLE)-1 )
+    {
+      printf("open device fail!\n");
+      result = 1;
+    }
+    else
+    {
+      Overlapped.Internal = 0;
+      Overlapped.InternalHigh = 0;
+      Overlapped.Offset = 0;
+      Overlapped.OffsetHigh = 0;
+      ResetEvent(v5);
+      Overlapped.hEvent = v5;
+      if ( DeviceIoControl(v7, v4, 0, 0, &OutBuffer, 8u, &BytesReturned, &Overlapped) )
+      {
+        GetOverlappedResult(v7, &Overlapped, &BytesReturned, 1);
+        result = 0;
+      }
+      else
+      {
+        printf("device ioctl fail!\n");
+        result = 1;
+      }
+    }
+  }
+  else
+  {
+    printf("CreateEvent fail!\n");
+    result = 1;
+  }
+  return result;
+}
+``` 
+
 After setting up kernel debugging, I was able to set a bp in the challenge.sys kernel driver on the jump table I found which redirects the lpr from the request code to its correct handler. I then sent the IOCTL call to the kernel driver with the code "22E0DC" and traced it down the jump table into its handler function. The IOCTL handler function consisted of a large sequence of "and" instructions and branches.
 Essentially, this function is responsible for determining the bits of a string. Decoding the string bit-by-bit produces the string, "try this ioctl: 22E068". I then sent another IOCTL call using "22E068" as the control code and traced it to what appeared to be a TEA decryption algorithm.
 Before the PC reaches the TEA decryption algorithm, however, it goes through a massive function which passes 3 arguments into another function: the key, an int which is later used to determine the number of rounds the decryption algorithm is iterated through, and the address of the buffer to be decrypted. The next function passes chunks of the data in the buffer into the actual TEA decryption algorithm in multiple rounds. After running a couple trials with WinDbg I noticed that the data contained within the buffer the TEA decryption algorithm decrypts changes with each runtime. However, the key and the number of rounds remain the same. After looking closer at the location of the buffer that is passed into the decryption function I x-ref'd each byte and noted they all contained constant values before being mutated by presumably the aforementioned massive function in the control code handler.
