@@ -1,3 +1,8 @@
+#Challenge 10
+####Binary: loader.exe
+####Type: PE Executable
+####Arch: x86
+
 ##Josh's Solution
 When I first executed the program, nothing appeared to happen. Upon closer inspection in Anubis, however, I discovered it created 2 files: c:/windows/system32/ioctl.exe and a kernel driver c:/windows/system32/challenge.sys
 <br><img src="imgs/chal10-anubis.png" width="300"><br>
