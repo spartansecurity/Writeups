@@ -112,7 +112,7 @@ The function  at 0x10570 passes chunks of the data in the buffer into the actual
 After running a couple trials with WinDbg I noticed that the data contained within the buffer the TEA decryption algorithm decrypts changes with each runtime. However, the key and the number of rounds remain the same. After looking closer at the location of the buffer that is passed into the decryption function I notice it references many global variabls. 
 <br><img src="imgs/chal10-global-vars.png" width="300"><br>
 I x-ref'd each global variable and noted they are all initialized to constant values before being mutated by presumably the aforementioned massive function in the control code handler.
-<br><img src="imgs/chal10-xref-globalvar.png" width="300"><br>
+<br><img src="imgs/chal10-xref-globalvar.png" width="200"><br>
 Putting the bytes of the xref'd bytes together gave me
 `567FDCFAAA2799C46C7CFC926161471A19B963FD0CF2B620C02D5CFDD97154964F43F7FFBB4C5D31`
 which I hoped would produce something meaningful if passed into the TEA decryption function. 
