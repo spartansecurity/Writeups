@@ -23,6 +23,7 @@ Tired and confused, I decided to take a step back and see exactly how argv[1] wa
 
 While setting an initial hardware r/w bp on argv[1] and following the addresses where it is read or copied from, and setting bp's on those addresses and following where those are read or copied from, and so on and so forth, I noticed only the lower byte of the hex number ever gets used. 
 This observation implies something useful: that one of the decimal numbers between 0 and 255 has to be correct and allow me to get through the loop without hanging.
+
 256 numbers is easily brute-forceable so I whipped up a quick IDAPython script to find the correct value:
 ```python
 from idaapi import *
@@ -84,5 +85,5 @@ Upon completion, this Z3 script reveals that the constraints can all be satisfie
 
 After playing around with different exit conditions for the loop, I noticed a pattern and quickly figured out that I needed to let the loop run until it hit 0xB. So, I binary patched the loop condition to reflect this by changing the 0x20 to 0xB and let the program run to completion after passing it an exception. 
 <br><img src="imgs/chal11-patched.png" width="400">  
-Finally when I checked my file directory after doing this, I found a valid secret.jpg waiting for me. 
+Finally when I checked my file directory after doing this, I found a valid `secret.jpg` waiting for me. 
 <br><img src="imgs/chal11-solved.png" width="300"><br>
