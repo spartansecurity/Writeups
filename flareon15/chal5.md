@@ -48,7 +48,7 @@ for i in range(0,34):
 print ''.join(solution)
 ```
 
-```
+```shell
 jwang@avantgarde:~/Documents/flareon15$ python l5.py 
 Sp1cy_7_layer_OSI_dip@flare-on.com
 ```
