@@ -14,8 +14,8 @@ When I ran the program without any arguments, the program sent back a message, "
 <br><img src="imgs/chal11-main.png" width="500"><br>
 I also noticed after running several trials with different numbers as the command line argument, that the program always seems to hang and never naturally terminates. After terminating the program forcefully, I notice it always outputs an empty `secret.jpg` file. My guess, then, was that I had to enter the correct argv[1] which would produce a valid .jpg file, hopefully containing the solution. First, I had to figure out what was causing the program to hang. 
 
-For my test case, I ran the program in a debugger with "50" as argv[1]. Looking at the disassembly again in IDA, I traced the problem to function 0x401170 which contains a really long loop. The loop's jnz exit condition uses an outrageous number like 0xDBE8E5DB, or 3,689,473,499 in decimal which is slowly decremented bit by bit. 
-After playing around with argv[1] for a bit, I noticed that different inputs change this exit condition number. So instead of having to iterate through the loop 0xDBE8E5DB times, if I changed argv[1] to "200", I would only have to iterate through it 0xC53A3550 times!
+For my test case, I ran the program in a debugger with `50` as argv[1]. Looking at the disassembly again in IDA, I traced the problem to function 0x401170 which contains a really long loop. The loop's jnz exit condition uses an outrageous number like 0xDBE8E5DB, or 3,689,473,499 in decimal which is slowly decremented bit by bit. 
+After playing around with argv[1] for a bit, I noticed that different inputs change this exit condition number. So instead of having to iterate through the loop 0xDBE8E5DB times, if I changed argv[1] to `200`, I would only have to iterate through it 0xC53A3550 times!
 <br><img src="imgs/chal11-not-gonna-finish-2.png" width="300"><br>
 <br><img src="imgs/chal11-not-gonna-finish-5.png" width="400"><br>  
 Yeah, not very helpful. I wasn't going to wait for that loop to finish, especially not while running the program on a really crappy Windows XP VM. So I had to try a different approach.
