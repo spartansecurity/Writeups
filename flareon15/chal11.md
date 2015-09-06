@@ -6,6 +6,8 @@
 ##Josh's Solution
 This level was by far the most difficult in the challenge. At least, for me. After a combined total of ~30 hrs of painful reversing, however, I finally solved it. I lost a lot of time trying to understand everything the encryption did which turned out to be a trap.
 <br><img src="imgs/trap.png" width="200"><br>
+Guess I should've listened to General Ackbar.
+
 Fortunately, to solve this challenge, you don't really need to understand what everything does. You just need to understand enough to get the gist of how the program works and how what functions you do understand interact with each other. Half of reversing is just learning to block out the white noise and focusing on what's important: what happens to the data you can control.
  
 When I ran the program without any arguments, the program sent back a message, "The number of parameters passed in is incorrect." Looking at the disassembly, I noted that it uses the WinAPI `CreateFile()` function to return a handle to a file it creates, named "secret.jpg". The program also takes in 1 command line argument and if it is an integer, returns its hex equivalent which is subsequently passed into the function at address 0x401910.
@@ -52,7 +54,9 @@ for i in range(0,255):
 		break
 ```
 After grabbing a cold brew and getting a couple minutes of fresh air, I came back to the script which had finished and stopped at the decimal number 205. When 205 is used as argv[1] the loop only has to decrement from 0xFFFF or 65535, which, even on my slow ass VM, is instantaneous. 
-However, after I exited this loop, I came across another obstacle. The function this loop is contained within is called within an outer loop at the end of function 0x4015D0 which depends on an exit condition which increments a value until it hits 0x20, or 32. And with each iteration, the value the exit condition references in the previous loop, 0xFFFF, increases substantially. So, it wasn't feasible, at least on my Windows VM, to wait for the entire loop to finish. Therefore, I was left with only two options: 1) buy a super computer 2) find a shortcut. I decided to go with 2). 
+However, after I exited this loop, I came across another obstacle. The function this loop is contained within is called within an outer loop at the end of function 0x4015D0 which depends on an exit condition which increments a value until it hits 0x20, or 32. 
+<br><img src="imgs/chal11-not-gonna-finish-3.png" width="500"><br>
+And with each iteration, the value the exit condition references in the previous loop, 0xFFFF, increases substantially. So, it wasn't feasible, at least on my Windows VM, to wait for the entire loop to finish. Therefore, I was left with only two options: 1) buy a super computer 2) find a shortcut. I decided to go with 2). 
 As it turns out, you don't have to wait for the entire loop to finish to generate a valid .jpg file. You can actually binary patch this loop to end it prematurely and still get a valid jpg file. You just need to figure out the exact number of times to let the loop run before exiting it. 
 To do this, I first observed that the number of times the loop runs affects the value of a variable, [EBX+0x638], in function 0x401B60 upon which, several arithmetic calculations are performed to determine the flow of execution in this function. 
 <br><img src="imgs/chal11-401b60-num.png" width="300"><br>
@@ -75,6 +79,6 @@ print s.check()
 print s.model()
 ```
 After running this script, Z3 tells us that the constraints can all be satisfied by the decimal number 33554432, or 0x2000000. So putting everything together, we now need to find the number of iterations of the loop in function 0x4015D0 to allow that will set the variable in function 0x401B60 to the value 0x2000000. 
-
+<br><img src="imgs/chal11-patched.png" width="500"><br>  
 After playing around with different exit conditions for the loop, I noticed a pattern and quickly figured out that I needed to let the loop run until it hit 0xB. So, I binary patched the loop condition to reflect this by changing the 0x20 to 0xB and let the program run to completion after passing it an exception. Finally when I checked my file directory after doing this, I found a valid secret.jpg waiting for me. 
 <br><img src="imgs/chal11-solved.png" width="300"><br>
