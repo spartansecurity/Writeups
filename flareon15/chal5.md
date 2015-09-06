@@ -13,7 +13,8 @@ Upon examining the pcap file, I noticed multiple HTTP POST packets being sent, e
 
 ![pcap 2](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-pcap-2.png)
 
-Putting all the 4 bytes together produces what appears to be the base-64 encoded string, DYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==
+Putting all the 4 bytes together produces what appears to be the base-64 encoded string, `UDYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==`
+
 I tried base-64 decoding the string, but it simply produced gibberish.
 
 Looking at the sender.exe file, I noticed the program takes user provided input and adds each character of the user input string to each corresponding character in the string "flarebearstare" and replaces the original character with the result. If the length of the user input string is greater than the length of "flarebearstare", after adding the last "e" in "flarebearstare" to the corresponding character in the user input string,"flarebearstare" is iterated through again from the beginning, and the next character in the user input string is added to "f", the following character after that is added to "l", and so on and so forth.
@@ -26,4 +27,10 @@ The resulting mutated string then appears to be base-64 encoded and the result i
 
 ![chal5 alphabet](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-alphabet.png)
 
-So, the program base-64 encodes the mutated user input, but switches the case of each letter. So, the actual base-64 encoded string that needs to be reversed is dyS1d7BnMDe1O3G5MS1v6rRycvVodjf1dPXktXaj9XUzw==
+So, the program base-64 encodes the mutated user input, but switches the case of each letter. So, the actual base-64 encoded string that needs to be reversed is `udyS1d7BnMDe1O3G5MS1v6rRycvVodjf1dPXktXaj9XUzw==` rather than `UDYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==`. 
+
+From there, I simply decoded the proper base-64 string and subtracted from each character in the decoded string its corresponding character in the "flarebearstare" string to get the flag.
+
+
+
+
