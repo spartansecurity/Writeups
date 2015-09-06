@@ -55,7 +55,7 @@ for i in range(0,255):
 ```
 After grabbing a cold brew and getting a couple minutes of fresh air, I came back to the script which had finished and stopped at the decimal number 205. When 205 is used as argv[1] the loop only has to decrement from 0xFFFF or 65535, which, even on my slow ass VM, is instantaneous. 
 However, after I exited this loop, I came across another obstacle. The function this loop is contained within is called within an outer loop at the end of function 0x4015D0 which depends on an exit condition which increments a value until it hits 0x20, or 32. 
-<br><img src="imgs/chal11-not-gonna-finish-3.png" width="500"><br>
+<br><img src="imgs/chal11-not-gonna-finish-3.png" width="300"><br>
 And with each iteration, the value the exit condition references in the previous loop, 0xFFFF, increases substantially. So, it wasn't feasible, at least on my Windows VM, to wait for the entire loop to finish. Therefore, I was left with only two options: 1) buy a super computer 2) find a shortcut. I decided to go with 2). 
 As it turns out, you don't have to wait for the entire loop to finish to generate a valid .jpg file. You can actually binary patch this loop to end it prematurely and still get a valid jpg file. You just need to figure out the exact number of times to let the loop run before exiting it. 
 To do this, I first observed that the number of times the loop runs affects the value of a variable, [EBX+0x638], in function 0x401B60 upon which, several arithmetic calculations are performed to determine the flow of execution in this function. 
