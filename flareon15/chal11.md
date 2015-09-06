@@ -5,7 +5,7 @@
 
 ##Josh's Solution
 This level was by far the most difficult in the challenge. At least, for me. After a combined total of ~30 hrs of painful reversing, however, I finally solved it. I lost a lot of time trying to understand everything the encryption did which turned out to be a trap.
-<br><img src="imgs/trap.png" width="300"><br>
+<br><img src="imgs/trap.png" width="200"><br>
 Fortunately, to solve this challenge, you don't really need to understand what everything does. You just need to understand enough to get the gist of what the program does and how what functions you do understand interact with each other. Half of reversing is just learning to block out the white noise and focusing on what's important: what happens to the data you can control.
  
 When I ran the program without any arguments, the program sent back a message, "The number of parameters passed in is incorrect." Looking at the disassembly, I noted that it uses the WinAPI CreateFile() function to return a handle to a file it creates, named "secret.jpg". The program also takes in 1 command line argument and if it is an integer, returns its hex equivalent which is subsequently passed into the function at address 0x401910.
