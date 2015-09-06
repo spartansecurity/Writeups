@@ -105,7 +105,14 @@ After setting up kernel debugging, I was able to set a bp in the challenge.sys k
 <br><img src="imgs/chal10-bitmasker-1.png" width="500"><br>
 Essentially, this function is responsible for determining the bits of a string. Decoding the string bit-by-bit produces the string, "try this ioctl: 22E068". I then sent another IOCTL call using "22E068" as the control code and traced it to what appeared to be a TEA decryption algorithm.
 <br><img src="imgs/chal10-tea-decrypt.png" width="500"><br>
-Before the PC reaches the TEA decryption algorithm, however, it goes through a massive function which passes 3 arguments into another function: the key, an int which is later used to determine the number of rounds the decryption algorithm is iterated through, and the address of the buffer to be decrypted. The next function passes chunks of the data in the buffer into the actual TEA decryption algorithm in multiple rounds. After running a couple trials with WinDbg I noticed that the data contained within the buffer the TEA decryption algorithm decrypts changes with each runtime. However, the key and the number of rounds remain the same. After looking closer at the location of the buffer that is passed into the decryption function I x-ref'd each byte and noted they all contained constant values before being mutated by presumably the aforementioned massive function in the control code handler.
+Before the PC reaches the TEA decryption algorithm, however, it goes through a massive function (0x2C760) which passes 3 arguments into another function (0x10570): the key, an int which is later used to determine the number of rounds the decryption algorithm is iterated through, and the address of the buffer to be decrypted. 
+<br><img src="imgs/chal10-hell-2.png" width="500"><br>
+The function  at 0x10570 passes chunks of the data in the buffer into the actual TEA decryption algorithm in multiple rounds. 
+<br><img src="imgs/chal10-endofhell.png" width="500"><br>
+After running a couple trials with WinDbg I noticed that the data contained within the buffer the TEA decryption algorithm decrypts changes with each runtime. However, the key and the number of rounds remain the same. After looking closer at the location of the buffer that is passed into the decryption function I notice it references many global variabls. 
+<br><img src="imgs/chal10-global-vars.png" width="500"><br>
+I x-ref'd each global variable and noted they are all initialized to constant values before being mutated by presumably the aforementioned massive function in the control code handler.
+<br><img src="imgs/chal10-xref-globalvar.png" width="500"><br>
 Putting the bytes of the xref'd bytes together gave me
 `567FDCFAAA2799C46C7CFC926161471A19B963FD0CF2B620C02D5CFDD97154964F43F7FFBB4C5D31`
 which I hoped would produce something meaningful if passed into the TEA decryption function. 
