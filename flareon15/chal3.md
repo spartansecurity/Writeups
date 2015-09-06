@@ -110,7 +110,7 @@ for i in target:
 print pad(chunk).decode('base64')
 ```
 
-```
+```bash
 jwang@avantgarde:~/Documents/flareon15/elfie$ python elfie.py | grep @
         if (O0O0O0000OOO000O00000OOO000OO000 == ''.join((OO00O00OOOO00OO000O00OO0OOOO0000 for OO00O00OOOO00OO000O00OO0OOOO0000 in reversed('moc.no-eralf@OOOOY.sev0000L.eiflE')))):
 ```
