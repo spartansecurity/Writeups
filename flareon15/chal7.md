@@ -13,10 +13,10 @@ The Main() function looks very straightforward.  Ultimately, the user input is s
 <br><img src="imgs/chal7-Unobfuscated.jpg" width="500"></br>
 
 So the plan of action is as follows:
-1. Swap the variable positions for `text` and `b` (so that Console.ReadLine().Trim() is saved to the location of `b`, and Class3.smethod_0() is saved to the location of `text`)
-2. Ignore/nop the *if* conditional
-3. ???
-4. Profit!
+  1. Swap the variable positions for `text` and `b` (so that Console.ReadLine().Trim() is saved to the location of `b`, and Class3.smethod_0() is saved to the location of `text`)
+  2. Ignore/nop the *if* conditional
+  3. ???
+  4. Profit!
 
 To do this, we open the unobfuscated version of the binary in IDA as Microsoft.Net Assembly.  We can see the methods being called and stored into variable locations.
 <br><img src="imgs/chal7-VariableLocations.jpg" width="500"></br>
