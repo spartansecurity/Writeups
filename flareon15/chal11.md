@@ -17,7 +17,7 @@ I also noticed after running several trials with different numbers as the comman
 For my test case, I ran the program in a debugger with "50" as argv[1]. Looking at the disassembly again in IDA, I traced the problem to function 0x401170 which contains a really long loop. The loop's jnz exit condition uses an outrageous number like 0xDBE8E5DB, or 3,689,473,499 in decimal which is slowly decremented bit by bit. 
 After playing around with argv[1] for a bit, I noticed that different inputs change this exit condition number. So instead of having to iterate through the loop 0xDBE8E5DB times, if I changed argv[1] to "200", I would only have to iterate through it 0xC53A3550 times!
 <br><img src="imgs/chal11-not-gonna-finish-2.png" width="300"><br>
-<br><img src="imgs/chal11-not-gonna-finish-5.png" width="500"><br>  
+<br><img src="imgs/chal11-not-gonna-finish-5.png" width="400"><br>  
 Yeah, not very helpful. I wasn't going to wait for that loop to finish, especially not while running the program on a really crappy Windows XP VM. So I had to try a different approach.
 Tired and confused, I decided to take a step back and see exactly how argv[1] was affecting that exit condition value by following it. Perhaps there was a value I could use as argv[1] that would generate a reasonable exit condition? After all, at that point in the level, it was the only element of the program that I knew I could control.
 
@@ -79,6 +79,6 @@ print s.check()
 print s.model()
 ```
 After running this script, Z3 tells us that the constraints can all be satisfied by the decimal number 33554432, or 0x2000000. So putting everything together, we now need to find the number of iterations of the loop in function 0x4015D0 to allow that will set the variable in function 0x401B60 to the value 0x2000000. 
-<br><img src="imgs/chal11-patched.png" width="500"><br>  
+<br><img src="imgs/chal11-patched.png" width="400"><br>  
 After playing around with different exit conditions for the loop, I noticed a pattern and quickly figured out that I needed to let the loop run until it hit 0xB. So, I binary patched the loop condition to reflect this by changing the 0x20 to 0xB and let the program run to completion after passing it an exception. Finally when I checked my file directory after doing this, I found a valid secret.jpg waiting for me. 
 <br><img src="imgs/chal11-solved.png" width="300"><br>
