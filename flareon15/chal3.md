@@ -98,6 +98,7 @@ def getchunk(chunk):
       decodeme+=i.split("'")[1]
     except:
       return decodeme
+
 def pad(chunk):
   missingpadding= 4 - len(chunk) % 4
   print missingpadding
