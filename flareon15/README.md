@@ -5,3 +5,6 @@ This set provides solutions to the 2015 FireEye Labs Advanced Reverse Engineerin
 <Enter statistics here>
 
 This directory contains some of the solutions that we came up with for each of the challenges.  We encourage you to try the challenges out and find solutions of your own.
+
+##Authors
+Armen Boursalian and Joshua Wang
