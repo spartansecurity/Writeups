@@ -237,3 +237,10 @@ for x in target:
 
 print ''.join(solution)
 ```
+
+```
+rh0gue@deception:~/Documents/flareon15/chal6$ python chal6.py 
+[*] building list of primes...
+[*] pwning...
+Should_have_g0ne_to_tashi_$tation@flare-on.com
+```
