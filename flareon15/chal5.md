@@ -21,7 +21,23 @@ Looking at the sender.exe file, I noticed the program takes user provided input 
 
 ![chal5 flarebearstare](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-flarebearstare.png)
 
-![chal5 mutate](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-mutate.png)
+```C
+void __fastcall mutate_input(int input, unsigned int a2)
+{
+  unsigned int iterator; // esi@1
+
+  iterator = 0;
+  if ( a2 )
+  {
+    do
+    {
+      *(_BYTE *)(iterator + input) += flarebearstare[iterator % 0xE];
+      ++iterator;
+    }
+    while ( iterator < a2 );
+  }
+}
+```
 
 The resulting mutated string then appears to be base-64 encoded and the result is sent as a series of HTTP POST requests. However, I noticed that the base-64 encoding scheme appeared to be slightly different than normal. Sender.exe uses an alphabet structure that switches the order of lower-case letters and upper-case characters. 
 
