@@ -238,7 +238,7 @@ for x in target:
 print ''.join(solution)
 ```
 
-```
+```Bash
 rh0gue@deception:~/Documents/flareon15/chal6$ python chal6.py 
 [*] building list of primes...
 [*] pwning...
