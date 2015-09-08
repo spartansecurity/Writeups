@@ -55,8 +55,13 @@ public class ValidateActivity
 
 This library can be found under the directory, `/lib/armeabi` as `libvalidate.so`.
 
-[to be completed]
 
+After getting [debugging setup](https://www.trustwave.com/Resources/SpiderLabs-Blog/Debugging-Android-Libraries-using-IDA/), 
+
+[to be finished]
+
+<br><img src="imgs/chal6-pointers-structs.png" width="300"></br>
+<br><img src="imgs/chal6-thats-it.png" width="400"></br>
 
 ```Python
 #!/usr/bin/python
@@ -69,7 +74,7 @@ bases = [0xac3485d0,0xac346aa8,0xac344f80,0xac343458,0xac341930,
 		 0xac32ee78,0xac32d350,0xac32b828,0xac329d00,0xac3281d8,
 		 0xac3266b0,0xac324b88,0xac323060]
 
-solution=[]
+solution = []
 target = []
 chars = range(32,127)
 for i in chars:
