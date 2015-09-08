@@ -56,7 +56,7 @@ public class ValidateActivity
 This library can be found under the directory, `/lib/armeabi` as `libvalidate.so`.
 
 
-After getting [debugging setup](https://www.trustwave.com/Resources/SpiderLabs-Blog/Debugging-Android-Libraries-using-IDA/), 
+After getting [remote debugging setup](https://www.trustwave.com/Resources/SpiderLabs-Blog/Debugging-Android-Libraries-using-IDA/), 
 
 [to be finished]
 
