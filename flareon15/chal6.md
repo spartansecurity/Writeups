@@ -1,11 +1,62 @@
 #Challenge 6                              
-####Binary: libvalidate
-####Type: Native Android Library
+####Binary: libvalidate.so, android.apk
+####Type: Native Android Library, Android Application Package (APK)
 ####Arch: ARM
 
 ##Josh's Solution
 
-<img src="imgs/chal6-droid-1.png" width="300">
+For this challenge, you are given an `android.apk` file. So first thing's first, I extracted and decompiled the source. I also installed the `android.apk` on an android emulator I setup:
+
+<br><img src="imgs/chal6-droid-1.png" width="300"><br>
+
+Basically, for this challenge you have to figure out what the correct text is, which is also the email address for level 7.
+
+Inside the decompiled source, I found `MainActivity.class` validated the user input using an imported library called `validate`.
+
+```Java
+package com.flareon.flare;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.TextView;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+
+public class ValidateActivity
+  extends ActionBarActivity
+{
+  static
+  {
+    System.loadLibrary("validate");
+  }
+  
+  protected void onCreate(Bundle paramBundle)
+  {
+    super.onCreate(paramBundle);
+    paramBundle = new TextView(this);
+    paramBundle.setTextSize(40.0F);
+    paramBundle.setGravity(17);
+    String str = getIntent().getStringExtra("com.flare_on.flare.MESSAGE");
+    if (Charset.forName("US-ASCII").newEncoder().canEncode(str)) {
+      paramBundle.setText(validate(str));
+    }
+    for (;;)
+    {
+      setContentView(paramBundle);
+      return;
+      paramBundle.setText("No");
+    }
+  }
+  
+  public native String validate(String paramString);
+}
+```
+
+This library can be found under the directory, `/lib/armeabi` as `libvalidate.so`.
+
+[to be completed]
+
 
 ```Python
 #!/usr/bin/python
