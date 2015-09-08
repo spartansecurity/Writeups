@@ -5,10 +5,10 @@
 
 ##Josh's Solution
 The challenge starts off with level 1 which is fairly trivial. You are given an executable which prompts you for the correct password.
-<br><img src="imgs/chal1-prompt.png" width="300"><br>
+<br><img src="imgs/chal1-prompt.png" width="400"><br>
 Looking at the disassembly, I found the program XOR's each character in the user input with 0x7D and compares the result to the elements in an array at address `0x402140`. If the result of XOR-ing each char in the user input matches all chars in the array, "You are success" is printed. 
 
-<br><img src="imgs/chal1-ida-1.png" width="500"><br>
+<br><img src="imgs/chal1-ida-1.png" width="700"><br>
 <br><img src="imgs/chal1-secret.png" width="300"><br>
 
 To solve this challenge, just XOR every character in the array with 0x7D. This can be done very quickly in Python.
