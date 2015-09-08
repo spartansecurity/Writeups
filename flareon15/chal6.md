@@ -5,7 +5,7 @@
 
 ##Josh's Solution
 
-<br><img src="imgs/chal6-droid-1.png" width="300">
+<img src="imgs/chal6-droid-1.png" width="300">
 
 ```Python
 #!/usr/bin/python
