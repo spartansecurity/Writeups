@@ -5,6 +5,8 @@
 
 ##Josh's Solution
 
+<br><img src="imgs/chal6-droid-1.png" width="500">
+
 ```Python
 #!/usr/bin/python
 
