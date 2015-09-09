@@ -74,7 +74,7 @@ Doing this after opening the program does nothing.  However, after entering some
 
 Why look at the code when you can have the email for free? :)
 
-##Josh's Solution
+###Josh's Solution
 ^I should've done it that way. I can't believe a wrote a shitty script for this.
 ```python
 #!/usr/bin/python
