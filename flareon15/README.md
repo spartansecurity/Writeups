@@ -774,7 +774,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 }
 ``` 
 
-After setting up kernel debugging, I was able to set a bp in the `challenge.sys` kernel driver on the jump table I found which redirects the lpr from the request code to its correct handler. I then sent the IOCTL call to the kernel driver with the code "22E0DC" and traced it down the jump table into its handler function @ `0x29B620`. The IOCTL handler function consisted of a large sequence of "and" instructions and branches.
+After setting up kernel debugging, I was able to set a bp in the `challenge.sys` kernel driver on the jump table I found which redirects the I/O request packet (IRP) from the request code to its correct handler. I then sent the IOCTL call to the kernel driver with the code "22E0DC" and traced it down the jump table into its handler function @ `0x29B620`. The IOCTL handler function consisted of a large sequence of "and" instructions and branches.
 <br><img src="imgs/chal10-bitmasker-1.png" width="500"><br>
 Essentially, this function is responsible for determining the bits of a string. Decoding the string bit-by-bit produces the string, "try this ioctl: 22E068". I then sent another IOCTL call using "22E068" as the control code and traced it to what appeared to be a TEA decryption algorithm.
 <br><img src="imgs/chal10-tea-decrypt.png" width="500"><br>
