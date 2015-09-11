@@ -227,10 +227,7 @@ The number of iterations required to reach a solution varies depending on the ho
 The challenge contains both a challenge.pcap file and a sender.exe file.
 
 Upon examining the pcap file, I noticed multiple HTTP POST packets being sent, each containing 4 bytes of ASCII characters in the body:
-
-![pcap 1](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-pcap-1.png)
-
-![pcap 2](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-pcap-2.png)
+<br><img src="imgs/chal5-wireshark.png" width="400"></br>
 
 Putting all the 4 bytes together produces what appears to be the base-64 encoded string, `UDYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==`
 
@@ -238,7 +235,7 @@ I tried base-64 decoding the string, but it simply produced gibberish.
 
 Looking at the sender.exe file, I noticed the program takes user provided input and adds each character of the user input string to each corresponding character in the string "flarebearstare" and replaces the original character with the result. If the length of the user input string is greater than the length of "flarebearstare", after adding the last "e" in "flarebearstare" to the corresponding character in the user input string,"flarebearstare" is iterated through again from the beginning, and the next character in the user input string is added to "f", the following character after that is added to "l", and so on and so forth.
 
-![chal5 flarebearstare](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-flarebearstare.png)
+<br><img src="imgs/chal5-flarebearstare.png" width="500"></br>
 
 ```C
 void __fastcall mutate_input(int input, unsigned int a2)
@@ -258,9 +255,8 @@ void __fastcall mutate_input(int input, unsigned int a2)
 }
 ```
 
-The resulting mutated string then appears to be base-64 encoded and the result is sent as a series of HTTP POST requests. However, I noticed that the base-64 encoding scheme appeared to be slightly different than normal. Sender.exe uses an alphabet structure that switches the order of lower-case letters and upper-case characters. 
-
-![chal5 alphabet](https://github.com/conceptofproof/flareon15/raw/master/imgs/chal5-alphabet.png)
+The resulting mutated string then appears to be base-64 encoded and the result is sent as a series of HTTP POST requests. However, I noticed that the base-64 encoding scheme appeared to be slightly different than normal: Sender.exe switches the order of lower-case letters and upper-case characters. 
+<br><img src="imgs/chal5-alphabet.png" width="300"></br>
 
 So, the program base-64 encodes the mutated user input, but switches the case of each letter. So, the actual base-64 encoded string that needs to be reversed is `udyS1d7BnMDe1O3G5MS1v6rRycvVodjf1dPXktXaj9XUzw==` rather than `UDYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==`. 
 
@@ -629,18 +625,31 @@ Running the patched program allows us to input anything, and the email to the ne
 <br><img src="imgs/chal7-Solved.jpg" width="500"></br>
 
 ##Challenge 8
-#####Binary: 
+#####Binary: gdssagh
 #####Type: PE Executable
 #####Arch: x86
 ###Josh's Solution
 
 When the binary is run it simply prints `the one who seeks finds...`. When we run strings on the binary, we can see base-64 encoded data.
 
+```
+iVBORw0KGgoAAAANSUhEUgAAAlgAAAHgCAIAAAD2dYQOAAEAAElEQVR4nIT9b5Ak13UfCp57
+8ubNW7eysrOrq6trenp6GoPBcDAcjkCQhGCIhGmQomg/WfbKtGQ7HLbCsbGxX97au/Ei/OHt
+ft5dvxfvbXgdu7L3xYsNr0PPT6a1WlpS6FESDfFBFAiCIDgYDgaNRqPR6Ompqa6uzs7Kunnz
+5smT+6F6QNnWxubExHTU1J+u/HN+f87v3BT/h3/275xbWJdrHQwHcYu1tWfM1O+vMGM2W0Sy
+U3kochqkAyn1xB3FsZGSAShJVBqbQEIAKKX03jMAAzGQ1hK19M6Wc5HnOTBrrR05u5h3E725
+[snipped]
+CiE8x3xrjYjJ6kNED0d0UhZARVoyBgQR4RFwh6abqhsyYOuCBB5UDWOsFESS8IIqppoOfnbT
+ljYkuyMi9ZorXEZEIMCmCk0L0lqz1rJi7fAI5izeqT3ICYucOqxWkrd9qBlvdej3Pda+Rpiv
+cjmTbpGMJdXIIyISAql5IDv7wJ1I9/7zcTH7/JU/fMcR6nsTQyt/2E322P/i/xepIVI4nOLY
+RQAAAABJRU5ErkJggg==j
+```
+
 Base-64 decoding this data produces a valid .PNG file.
 
 <img src="imgs/chal8-gdssagh.png" width="500"></br>
 
-Using `zsteg` on the image reveals that there is a PE executable hidden within this .png.
+Using `zsteg` on the image reveals that it contains a PE executable.
 
 ```Bash
 b1,rgb,msb,xy       .. file: PE32 executable Intel 80386 32-bit
