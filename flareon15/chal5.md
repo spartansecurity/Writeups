@@ -8,7 +8,6 @@
 The challenge contains both a challenge.pcap file and a sender.exe file.
 
 Upon examining the pcap file, I noticed multiple HTTP POST packets being sent, each containing 4 bytes of ASCII characters in the body:
-
 <br><img src="imgs/chal5-wireshark.png" width="400"></br>
 
 Putting all the 4 bytes together produces what appears to be the base-64 encoded string, `UDYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==`
