@@ -4,9 +4,9 @@
 ####Arch: x86
 ##Josh's Solution
 
-When the binary is run it simply prints `the one who seeks finds...` When we run strings on it, we can see base-64 encoded data.
+When the binary is run it simply prints `the one who seeks finds...`. When we run strings on the binary, we can see base-64 encoded data.
 
-When this data is base-64 decoded, it produces a valid .PNG file.
+Base-64 decoding this data produces a valid .PNG file.
 
 <img src="imgs/chal8-gdssagh.png" width="500"></br>
 
