@@ -39,7 +39,7 @@ void __fastcall mutate_input(int input, unsigned int a2)
 
 The resulting mutated string then appears to be base-64 encoded and the result is sent as a series of HTTP POST requests. However, I noticed that the base-64 encoding scheme appeared to be slightly different than normal. Sender.exe switches the order of lower-case letters and upper-case characters when pushing them onto the stack. 
 
-<br><img src="imgs/chal5-alphabet.png" width="400"></br>
+<br><img src="imgs/chal5-alphabet.png" width="300"></br>
 
 So, the program base-64 encodes the mutated user input, but switches the case of each letter. So, the actual base-64 encoded string that needs to be reversed is `udyS1d7BnMDe1O3G5MS1v6rRycvVodjf1dPXktXaj9XUzw==` rather than `UDYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==`. 
 
