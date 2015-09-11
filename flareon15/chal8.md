@@ -1,5 +1,5 @@
 #Challenge 8
-####Binary: 
+####Binary: gdssagh
 ####Type: PE Executable
 ####Arch: x86
 ##Josh's Solution
@@ -10,7 +10,7 @@ Base-64 decoding this data produces a valid .PNG file.
 
 <img src="imgs/chal8-gdssagh.png" width="500"></br>
 
-Using `zsteg` on the image reveals that there is a PE executable hidden within this .png.
+Using `zsteg` on the image reveals that it contains a PE executable.
 
 ```Bash
 b1,rgb,msb,xy       .. file: PE32 executable Intel 80386 32-bit
