@@ -6,3 +6,8 @@
 
 When the binary is run it simply prints he one who seeks finds... When we run strings on it, we can see base-64 encoded data.
 
+When this data is base-64 decoded, it produces a valid .PNG file.
+
+<br><img src="imgs/chal8-gdssagh.png" width="500"></br>
+
+Using `zsteg`
