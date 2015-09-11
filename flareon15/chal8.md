@@ -6,6 +6,19 @@
 
 When the binary is run it simply prints `the one who seeks finds...`. When we run strings on the binary, we can see base-64 encoded data.
 
+```
+iVBORw0KGgoAAAANSUhEUgAAAlgAAAHgCAIAAAD2dYQOAAEAAElEQVR4nIT9b5Ak13UfCp57
+8ubNW7eysrOrq6trenp6GoPBcDAcjkCQhGCIhGmQomg/WfbKtGQ7HLbCsbGxX97au/Ei/OHt
+ft5dvxfvbXgdu7L3xYsNr0PPT6a1WlpS6FESDfFBFAiCIDgYDgaNRqPR6Ompqa6uzs7Kunnz
+5smT+6F6QNnWxubExHTU1J+u/HN+f87v3BT/h3/275xbWJdrHQwHcYu1tWfM1O+vMGM2W0Sy
+U3kochqkAyn1xB3FsZGSAShJVBqbQEIAKKX03jMAAzGQ1hK19M6Wc5HnOTBrrR05u5h3E725
+[snipped]
+CiE8x3xrjYjJ6kNED0d0UhZARVoyBgQR4RFwh6abqhsyYOuCBB5UDWOsFESS8IIqppoOfnbT
+ljYkuyMi9ZorXEZEIMCmCk0L0lqz1rJi7fAI5izeqT3ICYucOqxWkrd9qBlvdej3Pda+Rpiv
+cjmTbpGMJdXIIyISAql5IDv7wJ1I9/7zcTH7/JU/fMcR6nsTQyt/2E322P/i/xepIVI4nOLY
+RQAAAABJRU5ErkJggg==j
+```
+
 Base-64 decoding this data produces a valid .PNG file.
 
 <img src="imgs/chal8-gdssagh.png" width="500"></br>
