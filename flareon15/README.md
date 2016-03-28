@@ -75,7 +75,7 @@ Doing this after opening the program does nothing.  However, after entering some
 Why look at the code when you can have the email for free? :)
 
 ###Josh's Solution
-^I should've done it that way. I can't believe a wrote a crappy script for this.
+^I should've done it that way. I can't believe a wrote a script for this.
 ```python
 #!/usr/bin/python
 import subprocess
@@ -889,7 +889,7 @@ For my test case, I ran the program in a debugger with `50` as argv[1]. Looking 
 After playing around with argv[1] for a bit, I noticed that different inputs change this exit condition number. So instead of having to iterate through the loop 0xDBE8E5DB times, if I changed argv[1] to `200`, I would only have to iterate through it 0xC53A3550 times!
 <br><img src="imgs/chal11-not-gonna-finish-2.png" width="300"><br>
 <br><img src="imgs/chal11-not-gonna-finish-5.png" width="400"><br>  
-Yeah, not very helpful. I wasn't going to wait for that loop to finish, especially not while running the program on a really crappy Windows XP VM. So I had to try a different approach.
+Yeah, not very helpful. I wasn't going to wait for that loop to finish, especially not while running the program on a really slow Windows XP VM. So I had to try a different approach.
 Tired and confused, I decided to take a step back and see exactly how argv[1] was affecting that exit condition value by following it. Perhaps there was a value I could use as argv[1] that would generate a reasonable exit condition? After all, at that point in the level, it was the only element of the program that I knew I could control.
 
 While setting an initial hardware r/w bp on argv[1] and following the addresses where it is read or copied from, and setting bp's on those addresses and following where those are read or copied from, and so on and so forth, I noticed only the lower byte of the hex number ever gets used. 
