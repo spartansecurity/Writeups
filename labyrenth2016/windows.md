@@ -193,13 +193,11 @@ retn
 
 After obtaining a handle to DLLs using this technique, pointers to functions can be obtained by walking the DLL's export table.  The following functions are imported:
 
-| Function | DLL |
-| - | - |
-| VirtualAlloc | Kernel32 |
-| GetUserDefaultUILanguage | Kernel32 |
-| GetVersion | Kernel32 |
-| GetLocalTime | Kernel32 |
-| MessageBoxA | User32 |
+- VirtualAlloc
+- GetUserDefaultUILanguage
+- GetVersion
+- GetLocalTime
+- MessageBoxA
 
 It looks like our key will be output in a MessageBox again.  But what needs to happen to get there?  Well, after a call to `sub_401000`, there is a check for the characters `PAN{`.  It looks like `sub_401000` will somehow decrypt a buffer to output the key.
 
