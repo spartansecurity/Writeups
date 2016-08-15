@@ -113,7 +113,7 @@ If you do everything correctly, then an image file will be decrypted and dropped
 
 This challenge is called `JugsOfBeer`.  It was one of the tougher problems, judging by the number of people stuck on it looking at the progress chart.
 
-Upon running the program, we see that it is GUI application that asks for input in a text box and a Validate button.  It looks like we will hae to enter a valid key and hit the button.
+Upon running the program, we see that it is a GUI application that asks for input in a text box and a Validate button.  It looks like we will have to enter a valid key and hit the button.
 
 This program has a GUI interface, so our trick used in Challenge #1 will not work.  However, we can do something similar.  Your goal in these types of challenges should be to get a hold of the user input so that you can analyze what happens to it.  Since this is a GUI application, it most likely uses functions imported from `user32.dll`.  In the imports for this binary, we see a function called `GetDlgItemTextW` from `user32.dll`.  This sounds like what we're looking for, so we set a breakpoint at this function's entry.
 
@@ -153,7 +153,7 @@ In the results: http://sbjoshi.blogspot.com/2008/01/water-jug-puzzle.html
 
 It all makes sense now!  We have 3 jugs of beer of sizes 13, 7, and 19.  The ones with sizes 13 and 7 are completely filled, and we need to use these jugs to evenly divide the 20 units into 2 jugs filled with exactly 10 units.
 
-The blog above provides exactly the solution we need for this challenge.  In our input, pairs of numbers mean to transfer water from one jug to another.  For example, `31` means to transfer whatever is in `3` to `1` if the destination is filled all the way, then the remainder stays in the source.
+The blog above provides exactly the solution we need for this challenge.  In our input, pairs of numbers mean to transfer beer from one jug to another.  For example, `31` means to transfer whatever is in `3` to `1` if the destination is filled all the way, then the remainder stays in the source.  This explains why the input string needed to be of even length.
 
 Entering the correct sequence causes the key to the next challenge to be displayed on the screen.
 
