@@ -1,6 +1,6 @@
 # PAN LabyREnth CTF - Windows Challenges
 
-**Written by Armen Boursalian**
+*Written by Armen Boursalian*
 
 (Images may come in the future)
 
@@ -578,4 +578,6 @@ https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
 
 The code analyzes if an arrow key or the enter key was pressed.  This is to move the cursor.  Otherwise, if a character key was pressed, then the character is written to the designated slot in the GUI window.  We do not see the data stored in any array of characters; our input is stored in the label/widget.
 
-So now we want to know the answer to #2: What happens when we click "Enter"?  The function `Label3Click` (`_TForm1_Label3Click` in IDA) is called which calls `sub_450E1C`.  This function performs the validation.  Here, we see the variable `dword_454C60` which holds the number of times we failed validation (5 times causes an image to pop up).  The method `Controls::TControl::GetText(void)` is called to obtain characters from our input which are transformed and then compared against constants.  The rest of the challenge becomes the same as Challenge #8: take the constant, perform the reverse operations, and obtain the characters.  Do all that, and you will complete the PAN LabyREnth 2016 Windows track!
+So now we want to know the answer to #2: What happens when we click "Enter"?  The function `Label3Click` (`_TForm1_Label3Click` in IDA) is called which calls `sub_450E1C`.  This function performs the validation.  Here, we see the variable `dword_454C60` which holds the number of times we failed validation (5 times causes an image to pop up).  The method `Controls::TControl::GetText(void)` is called to obtain characters from our input which are transformed and then compared against constants.
+
+The rest of the challenge becomes the same as Challenge #8: take the constant, perform the reverse operations, and obtain the characters.  Do all that, and you will complete the PAN LabyREnth 2016 Windows track!
