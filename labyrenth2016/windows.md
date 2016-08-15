@@ -1,5 +1,9 @@
 # PAN LabyREnth CTF - Windows Challenges
 
+**Written by Armen Boursalian**
+
+(Images may come in the future)
+
 ## Challenge #1
 
 This binary has the file name "AntiD.exe".  This suggests that there will be some Anti-Disassembly or Anti-Debugging involved.
@@ -231,14 +235,12 @@ This is either a `1` or a `0`, and this value is added with 0x69 and placed into
 
 So each of the following items contributes the following possibilites to our keyspace:
 
-| Item | Combinations |
-| - | - |
-| UI Language | 5 |
-| Windows Version | 14 |
-| Month | 12 |
-| Days | 31 (just use the max rather than playing around with date logic) |
-| Hours | 24 |
-| Debugger Presence | 2 |
+UI Language: 5
+Windows Version: 14
+Months: 12
+Days: 31 (just use the max rather than playing around with date logic)
+Hours: 24
+Debugger Presence: 2
 
 This is about 1,249,920 combinations which is very doable for practically any computer.
 
@@ -550,3 +552,32 @@ PADDINGPADDINGPADDINGPADDINGPADDINGPADDINGPADDINGPADDINGP
 PAN{<key here>}
 PADDINGPADDINGPADDINGhibobPADDINGPADDINGPADDINGPAD
 ```
+
+## Challenge #8
+
+I don't have too much to say about this one.  It doesn't actually require kernel debugging.  If I had more time, I would have liked to have stepped through it with a debugger to identify exactly what it's doing with the filesystem filters.
+
+The `revhunt.exe` file is merely a dropper that loads the `revhunt.sys` driver.  Stepping through the driver, we see it register some filters with `FltRegisterFilter`.  The callback functions are in the data structure at `byte_140003140`.
+
+What we're interested in is in the function `sub_140001138`.  Here, we see 2 file names being built on the stack, presumably to check whether a certain file is being accessed by a certain process.  A `pan.flag` file is then read into a buffer which is sent to `sub_14000181C` for verification.
+
+If you just follow the buffer through the rest of the function, you can see that each character is transformed by some shift, XOR, or other arethmetic operation and then compared against constants.  Simply reversing the operations on the constants yields the key.
+
+## Challenge #9
+
+The binary given to us is called `DelphiChallenge.exe`.  However, static analysis using PEiD and the `pedump` command does not indicate that this is a Delphi binary.  The program is a GUI application in which you enter text, click the "Enter" button, and then verify whether your input is correct.  Again, the goal is to get a handle of the user input so that it can be analyzed.
+
+It turns out that the Delphi binary is actually embedded and packed.  The given file is merely a loader.  When I was running the packed executable to explore the program, I noticed that the code was running from the segment at `0x400000`.  So I started the program again with a hardware breakpoint at that address to identify when it gets written with the unpacked binary.  When the breakpoint hit, it appeared that the unpacked binary was at the address `0x6F18AD`.  I simply extracted the bytes using IDA and output them to disk to obtain the actual Delphi binary.
+
+I am not well-versed in Delphi, so I made use of the DeDe decompiler to better analyze the classes and functions.  Looking under the Procedures tab showed a list of Events.  Remember, Events are used for GUI applications to signal the program about buttons that are being clicked, keyboard presses, mouse positioning, etc.  We want to know 2 things:
+
+1. What happens to our keyboard input?
+2. What happens when we click "Enter"?
+
+The event `FormKeyDown` looks like it may help us answer #1 above.  In IDA, this is called `_TForm1_FormKeyDown`.  While debugging, we see that we can break on this function if we set a breakpoint and then type a character into the application.  Without going into any detail regarding the calling convention of Delphi, we see that our input is compared against a few values: `{ 0x25, 0x26, 0x27, 0x28, 0x0d}`.  If you type a value and check its value, you see that it certainly isn't the ASCII code for the character you typed.  It turns out that these are Virtual Keyboard Codes.  A list of them can be seen here:
+
+https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
+
+The code analyzes if an arrow key or the enter key was pressed.  This is to move the cursor.  Otherwise, if a character key was pressed, then the character is written to the designated slot in the GUI window.  We do not see the data stored in any array of characters; our input is stored in the label/widget.
+
+So now we want to know the answer to #2: What happens when we click "Enter"?  The function `Label3Click` (`_TForm1_Label3Click` in IDA) is called which calls `sub_450E1C`.  This function performs the validation.  Here, we see the variable `dword_454C60` which holds the number of times we failed validation (5 times causes an image to pop up).  The method `Controls::TControl::GetText(void)` is called to obtain characters from our input which are transformed and then compared against constants.  The rest of the challenge becomes the same as Challenge #8: take the constant, perform the reverse operations, and obtain the characters.  Do all that, and you will complete the PAN LabyREnth 2016 Windows track!
